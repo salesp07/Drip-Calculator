@@ -1,8 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for
-import pandas as pd
+from flask import Flask, render_template, request
 import yfinance as yf
 import math
-import requests
 
 
 def get_current_price(ticker):
@@ -44,17 +42,16 @@ def calculate(price, latest):
 
 def main(symbol):
     ticker = yf.Ticker(symbol)
-    print(ticker)
+
     try:
         current_price = get_current_price(ticker)
     except:
-        return [symbol.upper() + " is not a valid symbol.", "", "", ""]
-
+        return ["Please enter a valid symbol.", "", "", "", ""]
 
     dividends = yf.Ticker(symbol).dividends
 
     if dividends.size == 0:
-        return [symbol.upper() + " doesn't pay out dividends.", "", "", ""]
+        return [symbol.upper() + " doesn't pay out dividends.", "", "", "", ""]
 
     div_frequency = frequency(dividends)
 
@@ -66,7 +63,7 @@ def main(symbol):
     s.append("Current Price: $" + format(current_price, '.2f'))
     s.append("Dividend Frequency: " + div_frequency)
     s.append("Dividend Amount: $" + str(latest))
-    s.append("To get a DRIP, you will need " + str(drip) + " shares or $" + format((drip * current_price), '.2f'))
+    s.append("DRIP: " + str(drip) + " shares or $" + format((drip * current_price), '.2f'))
 
     return s
 
