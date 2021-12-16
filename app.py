@@ -10,6 +10,7 @@ def get_current_price(ticker):
 def frequency(dividends):
     date1 = dividends.index[-1].strftime('%Y-%m-%d')
     date2 = dividends.index[-2].strftime('%Y-%m-%d')
+    print(date1, date2)
 
     year1 = date1[0:4]
     year2 = date2[0:4]
@@ -31,6 +32,8 @@ def frequency(dividends):
         difference = "Semi-Annually"
     elif difference == 12:
         difference = "Annually"
+    else:
+        difference = "Unknown"
 
     return difference
 
@@ -52,8 +55,11 @@ def main(symbol):
 
     if dividends.size == 0:
         return [symbol.upper() + " doesn't pay out dividends.", "", "", "", ""]
+    elif dividends.size == 1:
+        div_frequency = "Unknown"
+    else:
+        div_frequency = frequency(dividends)
 
-    div_frequency = frequency(dividends)
 
     latest = dividends[-1]
     drip = calculate(current_price, latest)
